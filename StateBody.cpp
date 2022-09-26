@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include "Vectors.cpp"
 
 class StateBody
 {
@@ -9,8 +11,9 @@ class StateBody
     float newPosition;
     float velocity;
     float acceleration;
+    float mass;
     std::vector<Vector2D> forces;
-    Vector2D netForce;
+    Vector2D *netForce;
 
   public:
     void setOldPos(float oldPos)
@@ -23,9 +26,9 @@ class StateBody
       return this->oldPosition;
     }
 
-    void setNewPos(float newPos)
+    void setNewPos(float newPosition)
     {
-      return this->newPosition;
+      this->newPosition = newPosition;
     }
 
     float getNewPos()
@@ -44,7 +47,7 @@ class StateBody
     }
     void setAcceleration(float acceleration)
     {
-      this->acceleration = acceleration
+      this->acceleration = acceleration;
     }
 
     float getAcceleration()
@@ -52,8 +55,35 @@ class StateBody
       return this->acceleration;
     }
 
-    void addForce2DByComponent(int i, int j)
+    void addForce2DByComponent(float i, float j)
     {
-      this->forces->append(Vector2D(i, j));
+      Vector2D tempForce = Vector2D(i, j);
+      this->forces.push_back(tempForce);
+      Vector2D::vector2DAdd(this->netForce, tempForce);
+    }
+
+    Vector2D *getNetForce()
+    {
+      return this->netForce;
+    }
+
+    float getMass()
+    {
+      return this->mass;
+    }
+
+    void setMass(float mass)
+    {
+      this->mass = mass;
+    }
+
+    StateBody(float mass, float oldPos)
+    {
+      this->mass = mass;
+      this->oldPosition = oldPos;
+      this->newPosition = oldPos;
+      this->velocity = 0;
+      this->acceleration = 0;
+      this->netForce = new Vector2D(0,0);
     }
 };
